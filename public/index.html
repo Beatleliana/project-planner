@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Proyecto Eli</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="img/icono-pp3.png" />
+    <style>@import url('https://fonts.googleapis.com/css?family=Fira+Sans:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&subset=latin-ext');</style>
+    <style>@import url('https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i,700,700i,900,900i');</style>
+    <script src="index.js"></script>
+</head>
+
+<body>
+    <div class="contenedor">
+            <img src="img/icono-pp3.png" alt="icono-pp3" class="logo">
+            <h1>Proyect Planner</h1>
+            <h3>¿Vas a empezar un nuevo proyecto de diseño?<br>Te ayudamos a organizarlo</h3>
+        <div class="contenedor-botones">
+            <button class="boton" id="botonSignIn" onclick="getModalInicio()">INICIAR SESIÓN</button>
+    
+        </div>
+        
+        <!--modal del login sin form-->
+        <div id="modalSignIn" class="modal">
+            <div class="modal-contenido">
+                <span id="cerrarSignIn" class="close-modal"><img src="img/close.png"></span>
+                <div id="form-usuario-inicio" class="form-usuario">   
+                    <h4>INICIÁ SESIÓN</h4>
+                    <p>¿Todavía no tenés una cuenta? <a id="linkRegistro" onclick="getModalRegistro()">Registrarse</a></p>
+                    <input type="text" placeholder="Usuario" id="user-id" required>
+                    <input type="password" placeholder="Contraseña" id="password" required>
+                    <button id="do-login" class="boton" onclick="doLogin()">Iniciar sesión</button>
+                    <p><a href="" style="color:dodgerblue">¿Olvidaste tu contraseña?</a></p>
+                    
+                    <div class="error-message" id="error-message"></div>
+                </div>
+            </div>
+        </div>
+
+        <!--modal del registro con form-->
+        <div id="modalSignUp" class="modal">
+            <div class="modal-contenido">
+                <span id="cerrarSignUp" class="close-modal"> <img src="img/close.png"> </span>
+                <div id="form-usuario-registro" class="form-usuario">
+                    <h4>REGISTRATE</h4>
+                    <input type="text" placeholder="Usuario" required>
+                    <input type="text" placeholder="E-mail" required>
+                    <input type="password" placeholder="Crear contraseña" required>
+                    <input type="password" placeholder="Repetir contraseña" required>
+                    <button id="do-singup" class="boton" onclick="doSignUp()">Registrarme</button>
+                    <p>Al registrarte, aceptás los <br> <a href="" style="color:dodgerblue">Términos y condiciones</a>.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

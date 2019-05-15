@@ -1,0 +1,69 @@
+<div class="contenedor-uploads">
+    
+    {{#each listaReferentes}}
+        <div id="uploads-referentes">
+            <h3>Referentes</h3>
+            <img src="uploads/referentes/{{this.filename}}">
+            <button class="boton" onclick="deleteProduct({{this.filename}});">Borrar</button>
+        </div>
+    {{/each}}
+    
+    {{#each listaTipografias}}
+        <div id="uploads-tipografias">
+            <h3>Tipografías</h3>
+            <img onclick="showInfo({{this.id}})" src="images/{{this.filename}}">
+        </div>
+    {{/each}}
+
+    {{#each listaPaletas}}
+        <div id="uploads-paletas">
+            <h3>Paletas</h3>
+            <img onclick="showInfo({{this.id}})" src="images/{{this.filename}}">
+        </div>
+    {{/each}}
+
+    {{#each listaBocetos}}
+        <div id="uploads-bocetos">
+            <h3>Bocetos</h3>
+            <img onclick="showInfo({{this.id}})" src="images/{{this.filename}}">
+        </div>
+    {{/each}}
+    
+</div>
+
+
+<!--
+<script>
+    
+    // Script que se va a ejecutar en el navegador, con una consulta
+    // AJAX al server (que devuelve un string con la info).
+    function showInfo(dogId) {
+
+        let xhr = new XMLHttpRequest();
+        
+        xhr.onload = function() {
+            // Cuando volvió la info, pongo en el div que está al pie la info recibida (texto) y
+            // también un botón cuyo "onclick" llama a otra función que defino en este script,
+            // showDogPage(...), que recibe el id del perro y navega a la página de info completa.
+            document.getElementById("info").innerHTML = `${xhr.responseText} <button onclick="showDogPage(${dogId})" class="more">Ver más...</button>`;
+        }
+
+        xhr.open("GET", `/getDogInfo?id=${dogId}`);
+        xhr.send();
+    }
+
+    // Función que navega a la página de info completa de un perro
+    function showDogPage(id) {
+        // Indico al browser que navegue a esa URL (que sé que retorna un HTML)
+        window.location.href = `/dog?id=${id}`;
+    }
+
+</script>
+-->
+
+<!--<p class="titular">Galería</p>
+<div class="contenedor-archivos">
+    <h3>{{status}}</h3>
+    <h3>{{filename}}</h3>
+    
+</div>-->

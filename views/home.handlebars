@@ -1,0 +1,33 @@
+<div class="contenedor-proyecto">
+    <p>Bienvenide, {{{user}}}<p>
+    <button id="btnCrearProyecto" class="boton" onclick="mostrarForm()">Crear nuevo proyecto</button>
+    <div id="form-proyecto" style="display: none">
+        <p>Descripción del proyecto<p>
+        <form action="/descripcion" method="post">
+        <ul>
+            <li> <label for="proyecto-titulo">Título</label> <input type="text" size="15" name="titulo" required> </li>
+            <li> <label for="proyecto-autor">Autor(es)</label> <input type="text" size="15" name="autor"required> </li>
+            <li> <label for="proyecto-fecha">Fecha de entrega</label> <input type="text" size="15" name="fecha"required> </li>
+            <li> <label for="proyect-objetivo">Objetivos</label>
+                <textarea name="objetivos" placeholder="Escriba aquí sus comentarios" required></textarea> </li>
+            <li> <label for="proyect-condicionantes">Condicionantes</label>
+                <textarea name="condicionantes" placeholder="Escriba aquí sus comentarios" required></textarea> </li>
+        </ul>
+        <button type="submit" class="boton">Continuar</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    //Función que muestra/oculta el form del proyecto, variando su display al hacer click
+    function mostrarForm() {
+        let formProyecto = document.getElementById("form-proyecto");
+
+            if(formProyecto.style.display == "none") {
+                formProyecto.style.display = "block";
+            
+            } else if(formProyecto.style.display == "block") {
+                formProyecto.style.display = "none";
+            }
+    }
+</script>
