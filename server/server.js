@@ -173,11 +173,13 @@ app.post('/referentes', upload.array('image'), (req, res) => {
       });
     }
 
-  //1) res.redirect('/vistareferentes'); ---> si armo una ruta con html y redicciono ahi
-  //2) res.render('galeria', {listaReferentes:req.files} ) ---> si renderizo las imagenes directamente en una vista
+  //opcion 1) res.redirect('/vistareferentes'); ---> si armo una ruta con html y redicciono ahi
+  
+  //opcion 2) renderizo las imagenes directamente en una vista
+  res.render('galeria', {listaReferentes:req.files} ) 
     
-    // Renderizo la vista y le paso el array de objetos subidos
-    res.render('uploadOk', {listaReferentes: req.files});
+    //opcion 3) Renderizo la vista y le paso el array de objetos subidos
+    //res.render('uploadOk', {listaReferentes: req.files});
     } else {
       res.render('error');
     }
