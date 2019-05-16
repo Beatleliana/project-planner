@@ -48,7 +48,7 @@ app.get('/', (req, res) => {
 
 
 
-/* LOGIN */
+/* LOGIN */ 
 
 // Declaro variable global vacía que contendrá el nombre del user
 var user = "";
@@ -119,14 +119,13 @@ app.get('/subida-archivos', (req, res) => {
 
 /* Subida de archivos con multer */
 
-// Declaro una constante con las configuraciones de cómo se almacenarán los uploads: elijo ruta de destino, nombre del archivo y su extensión
+// Declaro una constante con las configuraciones del almacenamiento de uploads
 const storage = multer.diskStorage({
   // declaro ruta de destino
   destination: path.join(__dirname, '../public/uploads'),
 
-  // defino el nombre del archivo
+  // defino el nombre del archivo q se guarda, igual al original
   filename: (req, files, callback) => {
-    // determino el nombre del archivo que se guarda: va a llamarse como el original
     callback(null, files.originalname)},
 
   // filtro el archivo segun tipo, extensión
@@ -151,19 +150,22 @@ const upload = multer({storage:storage});
 app.post('/referentes', upload.array('image'), (req, res) => {
 
   console.log("Subiendo archivo...");
+  // Chequeo por consola el objeto que se sube
   console.log(req.files);
 
-  // Chequeo si el request de files está vacio o undefined, para renderizar una vista de ok o error
+  // Chequeo si ese objeto está vacio o undefined, para renderizar una vista de ok o error
   if(req.files !="" && req.files !=undefined) {
-    // Ejecuto un for del objeto req.files y redicciono a referentes
+    // Ejecuto un for en ese objeto para recorrerlo
     for(let x = 0; x < req.files.length; x++) {
       console.log("Guardando archivo en la carpeta de destino...")
-      // copio el archivo a la carpeta definitiva de referentes
+      
+      // el archivo subido a la carpeta general uploads, lo copio en la carpeta definitiva donde se almacena
       fs.createReadStream(`./public/uploads/${req.files[x].filename}`).pipe(fs.createWriteStream(`./public/uploads/referentes/${req.files[x].originalname}`)); 
       console.log(`El nombre del archivo es: ${req.files[x].filename}`);
       console.log("Borrando archivo temporal...");
-      // redirecciono y ahora borra el archivo temporal de uploads
-      fs.unlink((`./public/uploads/${req.files[x].filename}`), function (err){
+      
+      // borro ese archivo temporal subido a la carpeta general
+      fs.unlink((`./public/uploads/${req.files[x].filename}`), (err) => {
         if (err){
           console.log("No se borró el archivo temporal");
         }
@@ -174,42 +176,45 @@ app.post('/referentes', upload.array('image'), (req, res) => {
     }
 
   //opcion 1) res.redirect('/vistareferentes'); ---> si armo una ruta con html y redicciono ahi
-  
-  //opcion 2) renderizo las imagenes directamente en una vista
-  res.render('galeria', {listaReferentes:req.files} ) 
+  res.redirect('/vistareferentes');
+  //opcion 2) renderizo las imagenes directamente en una vista a la q le paso el array de objetos subidos
+    //res.render('galeria', {listaReferentes:req.files})
     
-    //opcion 3) Renderizo la vista y le paso el array de objetos subidos
-    //res.render('uploadOk', {listaReferentes: req.files});
+  //opcion 3) res.render('uploadOk', {listaReferentes: req.files}) ---> Renderizo una vista q toma sus nombres y da mensaje de ok
     } else {
       res.render('error');
     }
 })
 
 
-/* 1) GET que trae la ruta /vistareferentes con la imagen incrustada en html
+/* opcion 1) GET que trae la ruta /vistareferentes con la imagen incrustada en html*/
 // GET a vistareferentes, que visualiza la imagen subida
 app.get('/vistareferentes', function(req, res) {
-  // Entra a esa ruta del directorio
+  // Entra a la ruta del directorio donde estan los archivos subidos
   fs.readdir('./public/uploads/referentes/', function(err, files) {  
-      // Creo un html, en el q por cada array files se crea una imagen
+      // Creo un html
      var pagina ='<!doctype html><html><head></head><body>';
+     // Ejecuto un for para recorrer el array files
      for(var x = 0; x < files.length; x++) {
+        // agrego al html, un objeto img con cada objeto del for
          pagina +='<img src="./uploads/referentes/'+files[x]+'"><br>';
      }
-     // Inserto html para un link de retorno a /proyecto
-     pagina+='<br><a href="/proyecto">Retornar</a></body></html>';
-     // envío el html con la imagen de cada array files incrustada
+     // agrego al html un link de retorno a /subida-archivos
+     pagina+='<br><a href="/subida-archivos">Retornar</a></body></html>';
+     // envío el html final armado con la imagen de cada array files incrustada
      res.send(pagina);
   });
 });
-*/
 
 
-// TOFIX: GET a vistareferentes, que visualiza la imagen subida
+
+
+/* TODO: /galeria, vista que muestre en una galeria todas las img subidas del proyecto, de las 4 carpetas */
+// GET a galeria, que visualiza las imagenes subidas
 app.get('/galeria', function(req, res) {
   var divlistaReferentes = "";
   // Entra a esa ruta del directorio
-  fs.readdir(`./public/uploads/referentes/${req.query.id}`, function(err, files) {  
+  fs.readdir(`./public/uploads/referentes/${files.filename}`, function(err, files) {  
      //for(let x = 0; x < files.length; x++) {
       for (var x = 0; x < files.length; x++){
         divlistaReferentes +='<img src="./uploads/referentes/'+files[x]+'"><br>';
@@ -220,24 +225,6 @@ app.get('/galeria', function(req, res) {
 });
 
 
-/* Solución Ale para ver la img subida
-// POST a upload, envía las imagenes subidas y tira mensaje por consola con los datos del archivo subido
-app.post('/upload', (req, res) => {
-    console.log(req.file);
-    var body ="";
-    fs.readdir('./uploads', (err, archivos) => {
-      console.log(archivos);
-      //Recorre cada archivo subido a la carpeta uploads y 
-      for(let x=0; (archivos.length-1) >= x; x++){
-        body += `<img src="./uploads/${archivos[x]}"><br>`;
-      }
-      res.writeHead(200, {'Content-Type' :'text/html'});
-      //escribe el body del html con el archivo subido
-      res.write(`<body>${body}<body>`);
-      res.end();
-    });
-})
-*/
 
 // POST de /tipografias, repito lo mismo que con el post /referentes, solo cambio el res x redireccion
 app.post('/tipografias', upload.array('image'), (req, res) => {
@@ -274,6 +261,7 @@ app.get('/vistatipografias', function(req, res) {
      res.send(pagina);
   });
 });
+
 
 // POST de /paletas, repito lo mismo que con el post /tipografias
 app.post('/paletas', upload.array('image'), (req, res) => {
