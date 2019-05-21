@@ -1,14 +1,8 @@
 <div class="contenedor-uploads">
     
     <div class="contenedor-aviso">
-        <h1>CARGA EXITOSA!</h1>
-        {{#each listaReferentes}}
-        <p>El archivo <b>{{this.filename}}</b> fue subido correctamente</p>
-        {{/each}}
-        <a href="/subida-archivos" class="boton">Volver atrás</a>
-    </div>
 
-    {{#each listaReferentes}}
+    {{#each listaImgReferentes}}
         <div id="uploads-referentes">
             <h3>Referentes</h3>
             <img src="uploads/referentes/{{this.filename}}">
@@ -16,6 +10,8 @@
         </div>
     {{/each}}
     
+
+    <!-- TODO: Implementar con cada carpeta
     {{#each listaTipografias}}
         <div id="uploads-tipografias">
             <h3>Tipografías</h3>
@@ -36,5 +32,6 @@
             <img onclick="showInfo({{this.id}})" src="images/{{this.filename}}">
         </div>
     {{/each}}
+    -->
     
 </div>
