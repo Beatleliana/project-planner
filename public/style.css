@@ -3,6 +3,10 @@
     padding: 0px;
     margin: 0px;
     box-sizing: border-box;
+    /*-webkit-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    -moz-box-sizing: border-box;*/
 }
 
 *:focus {
@@ -74,21 +78,28 @@ h4 {
 header { 
     flex: 1 1 auto;
     text-align: center;
-    align-items: center;
-    background-color: #16a085;/*mas azulado: #1CA9A9;*/
-    font-size: 150%;
-    font-weight: 600;
-    font-style: italic;
-    padding: 15px;
-    color: white;
+    background-color: #16a085;
+    padding: 15px 0 0 0;
     position: relative;
     width: 100%;
 }
 
-nav {
-    background-color: #1BCAA8;/*mas azulado: #22C6C6;*/
+header p {
+    font-size: 150%;
+    font-weight: 600;
+    font-style: italic;
     color: white;
-    padding: 10px;
+    margin: 10px;
+}
+
+nav {
+    background-color: #1BCAA8;
+    color: white;
+    padding: 15px 0 15px 0;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    right: 0;
 }
 nav a {
     color: white;
@@ -96,7 +107,6 @@ nav a {
     text-transform: uppercase;
     margin: 0 10px 0 10px;
     font-weight: 400;
-
 }
 nav a:hover, nav a:focus {
     opacity: 1;
@@ -114,7 +124,7 @@ footer {
     justify-content: space-between;
     padding: 5px 20px;
     position: relative;
-    bottom: 0;
+    margin-bottom: 0;
     width: 100%;
 }
     .contacto ul{
@@ -301,6 +311,7 @@ footer {
     flex-flow: column nowrap;
     text-align: center;
     padding: 40px 40px 288px 40px;
+    margin-top: 34px;
 }
     .contenedor-proyecto > p {
         flex: 1 1 auto;
@@ -316,7 +327,6 @@ footer {
     flex: 1 1 auto;
     align-self: center;
     padding: 4% 6%;
-    /*border: 1px solid rgba(128, 128, 128, 0.46);*/
     border-radius: 5px;
     margin-top: 20px;
     margin-bottom: -200px;
@@ -324,7 +334,7 @@ footer {
     line-height: 30px;
     font-size: 15px;
     box-sizing: border-box;
-    background-color: #E1DCDC;/*#E4DEDE;*/
+    background-color: #E1DCDC;
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.336);
     text-align: left;
 }
@@ -383,12 +393,13 @@ footer {
     
 
 
-/*---PROYECTO---*/
+/*---SUBIDA ARCHIVOS---*/
 .contenedor-archivos {
     display: flex;
     flex-flow: row wrap;
     text-align: center;
-    padding: 40px 40px 67px 40px;
+    padding: 40px 40px 60px 40px;
+    margin-top: 40px;
 }
 
 .form-upload {
@@ -451,7 +462,8 @@ footer {
     margin-bottom: -54px;
     
 }
-/*
+
+/* TODO: estilo con el input file sin opacidad
 .form-upload {
     position: absolute;
     top: 50%;

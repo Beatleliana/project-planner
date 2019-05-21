@@ -215,7 +215,7 @@ app.get('/galeria', function(req, res) {
   var divlistaReferentes = "";
   // Entra a esa ruta del directorio
   fs.readdir(`./public/uploads/referentes/${files.filename}`, function(err, files) {  
-     //for(let x = 0; x < files.length; x++) {
+     
       for (var x = 0; x < files.length; x++){
         divlistaReferentes +='<img src="./uploads/referentes/'+files[x]+'"><br>';
       }
