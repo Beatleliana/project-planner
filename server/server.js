@@ -14,6 +14,7 @@ var urlencodedParser = bodyParser.urlencoded({ extended: true });
 
 // JS propios
 const login = require('./login');
+const uploadedFiles = require('./uploads');
 
 
 
@@ -174,90 +175,95 @@ app.post('/referentes', upload.array('image'), (req, res) => {
         }
       });
     }
-
-  //opcion 1) res.redirect('/vistareferentes'); ---> si armo una ruta con html y redicciono ahi
-  //res.redirect('/vistareferentes');
-  //opcion 2) renderizo las imagenes directamente en una vista a la q le paso el array de objetos subidos
-    //res.render('galeria', {listaReferentes:req.files})
-    
+  
   //opcion 3) Renderizo una vista q toma sus nombres y da mensaje de ok
-    res.render('uploadOk', {listaReferentes: req.files})
+    res.render('uploadOk', {listaUploads: req.files})
     } else {
       res.render('error');
     }
 })
 
 
-/* opcion 1) GET que trae la ruta /vistareferentes con la imagen incrustada en html*/
-// GET a vistareferentes, que visualiza la imagen subida
-app.get('/vistareferentes', function(req, res) {
-  // Entra a la ruta del directorio donde estan los archivos subidos
-  fs.readdir('./public/uploads/referentes/', function(err, files) {  
-      // Creo un html
-     var pagina ='<!doctype html><html><head></head><body>';
-     // Ejecuto un for para recorrer el array files
-     for(var x = 0; x < files.length; x++) {
-        // agrego al html, un objeto img con cada objeto del for
-         pagina +='<img src="./uploads/referentes/'+files[x]+'"><br>';
-     }
-     // agrego al html un link de retorno a /subida-archivos
-     pagina+='<br><a href="/subida-archivos">Retornar</a></body></html>';
-     // envío el html final armado con la imagen de cada array files incrustada
-     res.send(pagina);
-  });
+
+
+
+
+/* /galeria, vista que muestra todas las img subidas de la carpeta referentes
+// GET a galeria, que visualiza las imagenes subidas
+app.get('/galeria', function(req, res) {
+
+  uploadedFiles.getReferentes(
+    
+    listaReferentes => {
+      
+      res.render ('galeria', {
+        listaReferentes: listaReferentes
+      })
+    }
+  );
 });
-
-
+*/
 
 
 /* TODO: /galeria, vista que muestre en una galeria todas las img subidas del proyecto, de las 4 carpetas */
 // GET a galeria, que visualiza las imagenes subidas
 app.get('/galeria', function(req, res) {
-  
-  // Entra a esa ruta del directorio
-  fs.readdir(`./public/uploads/referentes`, function(err, files) {  
-    console.log(files);
-    
-    /* 
-    // Recorro el array de files
-      for (var x = 0; x < files.length; x++){
-        var imgReferente = `./uploads/referentes/${files[x]}`;
-        console.log(imgReferente);
-        //listaReferentes = files;
-        //imgReferentes ='<img src="./uploads/referentes/'+files[x]+'"><br>';
-        //nombreReferentes = files.filename;
-      }
-    */
 
-     // renderizo una vista galeria a la que le paso el objeto files de ese directorio
-     res.render('galeria', {listaReferentes: files});
-  });
+  uploadedFiles.getAllFiles(
+    
+    listaReferentes, listaTipografias => {
+      
+      res.render ('galeria', {
+        listaReferentes: listaReferentes,
+        listaTipografias: listaTipografias
+      })
+    }
+  );
 });
 
 
 
-// POST de /tipografias, repito lo mismo que con el post /referentes, solo cambio el res x redireccion
+
+
+// POST /tipografias, archivos subidos por el form de referentes
+// Mismo procedimiento que con /referentes
 app.post('/tipografias', upload.array('image'), (req, res) => {
-  console.log("entra a /tipografias")
-  for(var x = 0; x < req.files.length; x++) {
-    console.log("entrar al for de req.files y redirecciona a tipografias")
-    //copiamos el archivo a la carpeta definitiva de referentes
-   fs.createReadStream('./public/uploads/'+req.files[x].filename).pipe(fs.createWriteStream('./public/uploads/tipografias/'+req.files[x].originalname)); 
-   
-   console.log("redirecciono y ahora borra el archivo de uploads")
-   //borramos el archivo temporal creado
-   fs.unlink(('./public/uploads/'+req.files[x].filename), function (err){
-     if (err){
-       console.log("no se borro el archivo");
-     }
-     else{
-       console.log("se borro con exito")
-     }
-   } ); 
-   console.log("termina el for")
-}  
-  res.redirect('/vistatipografias');
+
+  console.log("Subiendo archivo...");
+  console.log(req.files);
+
+  if(req.files !="" && req.files !=undefined) {
+
+    for(let x = 0; x < req.files.length; x++) {
+      console.log("Guardando archivo en la carpeta de destino...")
+      
+      // solo cambio la carpeta donde se almacena por uploads/tipografias
+      fs.createReadStream(`./public/uploads/${req.files[x].filename}`).pipe(fs.createWriteStream(`./public/uploads/tipografias/${req.files[x].originalname}`)); 
+      console.log(`El nombre del archivo es: ${req.files[x].filename}`);
+      console.log("Borrando archivo temporal...");
+      
+      fs.unlink((`./public/uploads/${req.files[x].filename}`), (err) => {
+        if (err){
+          console.log("No se borró el archivo temporal");
+        }
+        else {
+          console.log("Se borró el archivo temporal con exito")
+        }
+      });
+    }
+    
+    res.render('uploadOk', {listaUploads: req.files})
+    } else {
+      res.render('error');
+    }
 })
+
+
+
+
+
+
+
 
 
 // GET a vistatipografias, que armar un html con el nombre de los archivos subidos
