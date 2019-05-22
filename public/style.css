@@ -59,6 +59,13 @@ h1{
     text-align: center;
 }
 
+h2 {
+    color: #EC7063;
+    font-size: 260%;
+    font-weight: 800;
+    margin-top: 30px;
+}
+
 h3{
     font-size: 150%;
     margin-top: 10pt;
@@ -69,10 +76,19 @@ h3{
 }
 
 h4 {
-    color: #EC7063;
-    font-size: 260%;
-    font-weight: 800;
-    margin-top: 30px;
+    font-size: 20px;
+    font-weight: 500;
+    color: #16a085;
+    margin: 60px 0 20px 0;
+    text-align: center;
+}
+
+h5 {
+    color: #16a085;
+    font-size: 80%;
+    margin: 10px;
+    font-weight: 500;
+    font-family: 'Roboto', sans-serif;
 }
 
 header { 
@@ -221,6 +237,7 @@ footer {
     align-self: center;
 }
 
+
 /* MODAL DEL SIGN UP, SING IN */
 .modal {
     display: none; /* oculta el modal de manera predeterminada */
@@ -310,8 +327,8 @@ footer {
     display: flex;
     flex-flow: column nowrap;
     text-align: center;
-    padding: 40px 40px 288px 40px;
-    margin-top: 34px;
+    padding: 40px 40px 276px 40px;
+
 }
     .contenedor-proyecto > p {
         flex: 1 1 auto;
@@ -391,6 +408,10 @@ footer {
         border-color: #16a085;
     }
     
+    #btnCrearProyecto {
+        width: 20%;
+        align-self: center;
+    }
 
 
 /*---SUBIDA ARCHIVOS---*/
@@ -399,7 +420,6 @@ footer {
     flex-flow: row wrap;
     text-align: center;
     padding: 40px 40px 60px 40px;
-    margin-top: 40px;
 }
 
 .form-upload {
@@ -410,14 +430,7 @@ footer {
     height: 40%;
     margin: 15px 20px 0px 20px;
 }
-  .form-upload p {
-    flex: 1 1 auto;
-    font-size: 20px;
-    font-weight: 500;
-    color: #16a085;
-    margin-bottom: 20px;
-    text-align: center;
-  }
+
   .form-upload form {
       display: flex;
       flex-flow: column nowrap;
@@ -426,7 +439,6 @@ footer {
   
     .form-upload input[type="file"] {
         flex: 1 1 auto;
-        outline: none;
         cursor: pointer;
         border: 2px dashed #CECECE;
         width: 200px;
@@ -523,5 +535,31 @@ footer {
     display: flex;
     flex-flow: column wrap;
     text-align: center;
+    padding: 40px 40px 171px 40px;
 }
+
+.contenedor-uploadsCarpeta {
+    flex: 1 1 auto;
+    display: flex;
+    flex-flow: row wrap;
+}
+
+
+.contenedor-archivo {
+    flex: 1 1 auto;
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+    border: 2px solid red;
+    width: 20%;
+    
+
+}
+
+.img-upload{
+    width: 50%;
+    
+}
+
+
 /*

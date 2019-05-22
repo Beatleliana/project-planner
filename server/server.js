@@ -176,11 +176,12 @@ app.post('/referentes', upload.array('image'), (req, res) => {
     }
 
   //opcion 1) res.redirect('/vistareferentes'); ---> si armo una ruta con html y redicciono ahi
-  res.redirect('/vistareferentes');
+  //res.redirect('/vistareferentes');
   //opcion 2) renderizo las imagenes directamente en una vista a la q le paso el array de objetos subidos
     //res.render('galeria', {listaReferentes:req.files})
     
-  //opcion 3) res.render('uploadOk', {listaReferentes: req.files}) ---> Renderizo una vista q toma sus nombres y da mensaje de ok
+  //opcion 3) Renderizo una vista q toma sus nombres y da mensaje de ok
+    res.render('uploadOk', {listaReferentes: req.files})
     } else {
       res.render('error');
     }

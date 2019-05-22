@@ -1,17 +1,49 @@
 <div class="contenedor-uploads">
-    
-    <div class="contenedor-aviso">
-        <div id="uploads-referentes">
-        <h3>Referentes</h3>
+        <h4>Referentes</h4>
+        <div class="contenedor-uploadsCarpeta">
         {{#each listaReferentes}}
-            <div id="referente">
-                <h6>{{this.filename}}</h6>
-                <img src="uploads/referentes/{{this}}">
+            <div id="referente" class="contenedor-archivo">
+                <h5>{{this}}</h5>
+                <img src="uploads/referentes/{{this}}" class="img-upload">
                 <button class="boton" onclick="deleteProduct({{this}});">Borrar</button>
             </div>
         {{/each}}
         </div>
 
+        <h4>Tipografías</h4>
+        <div class="contenedor-uploadsCarpeta">
+        {{#each listaTipografias}}
+            <div id="tipografia" class="contenedor-archivo">
+                <h5>{{this}}</h5>
+                <img src="uploads/tipografias/{{this}}" class="img-upload">
+                <button class="boton" onclick="deleteProduct({{this}});">Borrar</button>
+            </div>
+        {{/each}}
+        </div>
+
+        <h4>Paletas</h4>
+        <div class="contenedor-uploadsCarpeta">
+        {{#each listaPaletas}}
+            <div id="paleta" class="contenedor-archivo">
+                <h5>{{this}}</h5>
+                <img src="uploads/paletas/{{this}}" class="img-upload">
+                <button class="boton" onclick="deleteProduct({{this}});">Borrar</button>
+            </div>
+        {{/each}}
+        </div>
+
+        <h4>Bocetos</h4>
+        <div class="contenedor-uploadsCarpeta">
+        {{#each listaBocetos}}
+            <div id="boceto" class="contenedor-archivo">
+                <h5>{{this}}</h5>
+                <img src="uploads/bocetos/{{this}}" class="img-upload">
+                <button class="boton" onclick="deleteProduct({{this}});">Borrar</button>
+            </div>
+        {{/each}}
+        </div>
+        
+        
     
 
     <!-- TODO: Implementar con cada carpeta
@@ -40,3 +72,7 @@
     -->
     
 </div>
+
+<script>
+    // TODO: funcion delete y funcion zoom in
+</script>
