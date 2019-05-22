@@ -212,15 +212,24 @@ app.get('/vistareferentes', function(req, res) {
 /* TODO: /galeria, vista que muestre en una galeria todas las img subidas del proyecto, de las 4 carpetas */
 // GET a galeria, que visualiza las imagenes subidas
 app.get('/galeria', function(req, res) {
-  var divlistaReferentes = "";
+  
   // Entra a esa ruta del directorio
   fs.readdir(`./public/uploads/referentes`, function(err, files) {  
-     
+    console.log(files);
+    
+    /* 
+    // Recorro el array de files
       for (var x = 0; x < files.length; x++){
-        divlistaReferentes +='<img src="./uploads/referentes/'+files[x]+'"><br>';
+        var imgReferente = `./uploads/referentes/${files[x]}`;
+        console.log(imgReferente);
+        //listaReferentes = files;
+        //imgReferentes ='<img src="./uploads/referentes/'+files[x]+'"><br>';
+        //nombreReferentes = files.filename;
       }
-     // envío el html con la imagen de cada array files incrustada
-     res.render('galeria', {listaImgReferentes: divlistaReferentes});
+    */
+
+     // renderizo una vista galeria a la que le paso el objeto files de ese directorio
+     res.render('galeria', {listaReferentes: files});
   });
 });
 

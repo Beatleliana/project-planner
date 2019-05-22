@@ -1,17 +1,22 @@
 <div class="contenedor-uploads">
     
     <div class="contenedor-aviso">
-
-    {{#each listaImgReferentes}}
         <div id="uploads-referentes">
-            <h3>Referentes</h3>
-            <img src="uploads/referentes/{{this.filename}}">
-            <button class="boton" onclick="deleteProduct({{this.filename}});">Borrar</button>
+        <h3>Referentes</h3>
+        {{#each listaReferentes}}
+            <div id="referente">
+                <h6>{{this.filename}}</h6>
+                <img src="uploads/referentes/{{this}}">
+                <button class="boton" onclick="deleteProduct({{this}});">Borrar</button>
+            </div>
+        {{/each}}
         </div>
-    {{/each}}
+
     
 
     <!-- TODO: Implementar con cada carpeta
+    <img src="{{{this.imgReferente}}}">
+    <img src="uploads/referentes/{{this.filename}}">
     {{#each listaTipografias}}
         <div id="uploads-tipografias">
             <h3>Tipografías</h3>
