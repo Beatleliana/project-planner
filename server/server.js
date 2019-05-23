@@ -204,8 +204,6 @@ app.get('/galeria', function(req, res) {
 });
 */
 
-var listaReferentes;
-var listaTipografias;
 
 
 /* ESTO NO FUNCIONA -> 

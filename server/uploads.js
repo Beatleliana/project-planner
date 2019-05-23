@@ -17,7 +17,7 @@ const fs = require('fs');
  */
 function getFilesReferentes(success, failure) {
 
-    fs.readdir(`../public/uploads/referentes`, function(err, listaReferentes) { 
+    fs.readdir(`../public/uploads/referentes`, (err, listaReferentes) => { 
         if (!err) {
             success(listaReferentes);
         } else {
@@ -38,7 +38,7 @@ function getFilesReferentes(success, failure) {
  */
 function getFilesTipografias(success, failure) {
 
-    fs.readdir(`../public/uploads/tipografias`, function(err, listaTipografias) { 
+    fs.readdir(`../public/uploads/tipografias`, (err, listaTipografias) => { 
         if (!err) {
             success(listaTipografias);
         } else {
@@ -54,7 +54,7 @@ function getFilesTipografias(success, failure) {
 /**
  * Función que consulta y devuelve cada una de las carpetas
  */
-function getAllFiles() {
+function getAllFiles(listaReferentes, listaTipografias) {
 
     getFilesReferentes(listaReferentes);
     getFilesTipografias(listaTipografias);
