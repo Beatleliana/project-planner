@@ -1,4 +1,4 @@
-/*Armo el objeto que se exporta, que se lo que se obtiene como módulo al hacer require de este js.*/
+/*Armo el objeto a exportar, q se convierte en módulo del archivo ppal server.js al hacer require de este js.*/
 module.exports = {
     getReferentes: getFilesReferentes,
     getTipografias: getFilesTipografias,
@@ -7,23 +7,19 @@ module.exports = {
 
 
 const fs = require('fs');
-const path = require('path');
-const directorioReferentes = path.join(__dirname, `../public/uploads/referentes`);
-const directorioTipografias = path.join(__dirname, `../public/uploads/tipografias`);
 
 
 /**
- * Función que consulta y devuelve la lista completa de perros del archivo JSON,
- * sin la información del archivo dogs-info.
+ * Función que consulta y devuelve el array de archivos en la carpeta /referentes
  * 
  * @param {function} success Callback para resultado ok
  * @param {function} failure Callback para error
  */
 function getFilesReferentes(success, failure) {
 
-    fs.readdir(directorioReferentes, function(err, files) { 
+    fs.readdir(`../public/uploads/referentes`, function(err, listaReferentes) { 
         if (!err) {
-            success(files);
+            success(listaReferentes);
         } else {
             // Muestro el error por consola para control mío
             console.log(err);
@@ -35,17 +31,16 @@ function getFilesReferentes(success, failure) {
 
 
 /**
- * Función que consulta y devuelve la lista completa de perros del archivo JSON,
- * sin la información del archivo dogs-info.
+ * Función que consulta y devuelve el array de archivos en la carpeta /tipografias
  * 
  * @param {function} success Callback para resultado ok
  * @param {function} failure Callback para error
  */
 function getFilesTipografias(success, failure) {
 
-    fs.readdir(directorioTipografias, function(err, files) { 
+    fs.readdir(`../public/uploads/tipografias`, function(err, listaTipografias) { 
         if (!err) {
-            success(files);
+            success(listaTipografias);
         } else {
             // Muestro el error por consola para control mío
             console.log(err);
@@ -57,14 +52,26 @@ function getFilesTipografias(success, failure) {
 
 
 /**
- * Función que consulta y devuelve la lista completa de perros del archivo JSON,
- * sin la información del archivo dogs-info.
- * 
- * @param {function} success Callback para resultado ok
- * @param {function} failure Callback para error
+ * Función que consulta y devuelve cada una de las carpetas
  */
 function getAllFiles() {
 
     getFilesReferentes(listaReferentes);
     getFilesTipografias(listaTipografias);
 };
+
+
+/* 
+function getUploadFiles(){
+
+    fs.readdir(`../public/uploads/`, (err, uploads) => { 
+        
+        uploads.forEach(tipoUpload => {
+            fs.readdir(`../public/uploads/${tipoUpload}`, (err, arrayUploads) => {
+                arrayUploads.forEach(archivo => {
+
+                })
+        }
+        )
+}
+*/

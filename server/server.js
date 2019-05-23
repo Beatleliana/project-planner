@@ -188,8 +188,8 @@ app.post('/referentes', upload.array('image'), (req, res) => {
 
 
 
-/* /galeria, vista que muestra todas las img subidas de la carpeta referentes
-// GET a galeria, que visualiza las imagenes subidas
+/* ESTO FUNCIONA
+// GET a galeria, que visualiza las imagenes subidas solo en la carpeta referentes
 app.get('/galeria', function(req, res) {
 
   uploadedFiles.getReferentes(
@@ -204,14 +204,18 @@ app.get('/galeria', function(req, res) {
 });
 */
 
+var listaReferentes;
+var listaTipografias;
 
-/* TODO: /galeria, vista que muestre en una galeria todas las img subidas del proyecto, de las 4 carpetas */
-// GET a galeria, que visualiza las imagenes subidas
+
+/* ESTO NO FUNCIONA -> 
+ TODO: /galeria, vista q muestre en una galeria todas las img de las 4 carpetas */
+// GET a galeria, que visualiza las imagenes subidas, pruebo con dos carpetas
 app.get('/galeria', function(req, res) {
 
   uploadedFiles.getAllFiles(
     
-    listaReferentes, listaTipografias => {
+    (listaReferentes, listaTipografias) => {
       
       res.render ('galeria', {
         listaReferentes: listaReferentes,
