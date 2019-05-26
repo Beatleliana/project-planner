@@ -7,6 +7,7 @@ const multer = require('multer');
 // Generador de vistas
 const exphbs = require('express-handlebars');
 
+const expressSession = require('express-session');
 const fs = require('fs');
 
 // extended: false significa que parsea solo string (no archivos de imagenes por ejemplo)
@@ -21,9 +22,21 @@ const uploadedFiles = require('./uploads');
 
 // Middleware de body-parser para json
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Ruta para recursos estáticos.
 app.use(express.static(path.join(__dirname, '../public')));
+
+
+
+// Manejo de sesión en Express con opciones bastante default, que no interesa
+// ahora profundizar, que definen el comportamiento ante ciertas ocasiones, más
+// bien orientadas a cuestiones de seguridad.
+app.use(expressSession({
+  secret: 'esta propiedad puede tener LITERALMENTE CUALQUIER COSA',
+  resave: false,
+  saveUninitialized: false
+}))
 
 
 
@@ -52,8 +65,9 @@ app.get('/', (req, res) => {
 /* LOGIN */ 
 
 // Declaro variable global vacía que contendrá el nombre del user
-var user = "";
+//var user = "";
 
+/*
 // POST /login
 app.post('/login', (req, res) => {
   console.log(req.body);
@@ -68,7 +82,8 @@ app.post('/login', (req, res) => {
     res.status(403).end();
   }
 });
-
+*/
+/*
 // GET a /home, renderiza un HTML de home
 app.get('/home', (req, res) => {
   res.render('home', {
@@ -76,6 +91,122 @@ app.get('/home', (req, res) => {
     user: `<i>${user}</i>`}
   )
 });
+*/
+
+
+
+
+// POST /login, recibo la info del form de logueo
+app.post('/login', (req, res) => {
+  
+  console.log(req.body);
+
+  // Chequeo que el form tenga info en los campos "user" y "password"
+  if (req.body.user !== undefined && req.body.password !== undefined) {
+
+    // Si es así, llamo a la función validar usuario
+    login.validarUsuario(req.body.user, req.body.password,
+      
+      // Callback de éxito si validó bien. Guarda la sesión e indica navegar al home
+      function() {
+        req.session.userId = req.body.user;
+        res.redirect('/home');
+      },
+
+      // Callback de error si validó mal, se destruye la sesión (si la hubiera) y redirige a página inicial
+      function() {
+        console.log('Error al validar el usuario');
+        req.session.destroy();
+        res.redirect('/');
+      }
+    );
+  }
+});
+
+
+// GET logout
+app.get('/logout', (req, res) => {
+
+  // Destruyo sesión y redirijo al login.
+  req.session.destroy();
+  res.redirect("/");
+
+});
+
+
+
+// POST /singup, recibo la info del form de registro
+app.post('/signup', (req, res) => {
+
+  console.log(req.body);
+
+  // Chequeo que el form tenga info en los campos "user" y "password"
+  if (req.body.user !== undefined && req.body.password !== undefined) {
+    
+    // Si es así, llamo a la función registrar usuario
+    login.registrarUsuario(req.body.user, req.body.password,
+      
+      // Callback de éxito si registró bien. Guarda la sesión e indica navegar al home
+      function() {
+        req.session.userId = req.body.user;
+        res.redirect('/home');
+      },
+      
+      // Callback de error si registró mal, se destruye la sesión (si la hubiera) y redirige a página inicial
+      function() {
+        console.log('Error al registrar el usuario');
+        req.session.destroy();
+        res.redirect('/');
+      }
+    );
+  }
+})
+
+
+// GET /home
+app.get('/home', (req, res) => {
+
+  // Cuando quiere ir a home, valido sesión.
+  if (req.session.userId !== undefined) {
+    var listaData = [];
+    fs.readdir(`./public/uploads`, (err, carpetas) => {
+      //por cada carpeta dentro de la uploads le agrego el nombre del usuario
+      carpetas.forEach(Usuario => {
+        //lee la carpeta con el nombre de usuario ubicada en uploads
+        fs.readdir(`./public/uploads/${Usuario}`, (err, carpetasUsuario) => {    
+          //si existen archivos dentro de la carpeta anterior
+          if(carpetasUsuario.length>=0 && carpetasUsuario.length<=3) {
+            //por cada objeto que se encuentra
+            carpetasUsuario.forEach(Proyecto => {
+              //registro los datos recolectados en la lista de objetos "listaDiscos"            
+              listaData.push({
+                  usuario : Usuario,
+                  nombre : Proyecto
+              });
+            });
+          }
+        })
+      })
+    })
+      // Renderiza el home, recibe como dato el nombre del usuario
+      res.render('home', {
+        title: 'PP - Home',
+        username: req.session.userId
+      });
+    } else {
+        //renderizo el handlebars de gallery-NoFile con los parametros de usuario, listaDiscos y playlist
+        res.render('home-NoFile',{
+            title: 'No hay archivos subidos al servidor',
+            usuario: req.session.userId,
+            listaData: listaData,
+        })
+      }
+  })
+
+
+
+
+
 
 
 
