@@ -1,78 +1,81 @@
 <div class="contenedor-uploads">
-        <h4>Referentes</h4>
-        <div class="contenedor-uploadsCarpeta">
-        {{#each listaReferentes}}
-            <div id="referente" class="contenedor-archivo">
-                <h5>{{this}}</h5>
-                <img src="uploads/referentes/{{this}}" class="img-upload">
-                <button class="boton" onclick="deleteProduct({{this}});">Borrar</button>
-            </div>
-        {{/each}}
-        </div>
-
-        <h4>Tipografías</h4>
-        <div class="contenedor-uploadsCarpeta">
-        {{#each listaTipografias}}
-            <div id="tipografia" class="contenedor-archivo">
-                <h5>{{this}}</h5>
-                <img src="uploads/tipografias/{{this}}" class="img-upload">
-                <button class="boton" onclick="deleteProduct({{this}});">Borrar</button>
-            </div>
-        {{/each}}
-        </div>
-
-        <h4>Paletas</h4>
-        <div class="contenedor-uploadsCarpeta">
-        {{#each listaPaletas}}
-            <div id="paleta" class="contenedor-archivo">
-                <h5>{{this}}</h5>
-                <img src="uploads/paletas/{{this}}" class="img-upload">
-                <button class="boton" onclick="deleteProduct({{this}});">Borrar</button>
-            </div>
-        {{/each}}
-        </div>
-
-        <h4>Bocetos</h4>
-        <div class="contenedor-uploadsCarpeta">
-        {{#each listaBocetos}}
-            <div id="boceto" class="contenedor-archivo">
-                <h5>{{this}}</h5>
-                <img src="uploads/bocetos/{{this}}" class="img-upload">
-                <button class="boton" onclick="deleteProduct({{this}});">Borrar</button>
-            </div>
-        {{/each}}
-        </div>
-        
-        
-    
-
-    <!-- TODO: Implementar con cada carpeta
-    <img src="{{{this.imgReferente}}}">
-    <img src="uploads/referentes/{{this.filename}}">
-    {{#each listaTipografias}}
-        <div id="uploads-tipografias">
-            <h3>Tipografías</h3>
-            <img onclick="showInfo({{this.id}})" src="images/{{this.filename}}">
+    <h4>Referentes</h4>
+    <div class="contenedor-uploadsCarpeta">
+    {{#each referentes}}
+        <div id="referente" class="contenedor-archivo">
+            <img src="uploads/referentes/{{this}}" class="img-upload" title="{{this}}">
+            <button class="boton" onclick="borrarArchivo({{this}})">Borrar</button>
         </div>
     {{/each}}
+    </div>
 
-    {{#each listaPaletas}}
-        <div id="uploads-paletas">
-            <h3>Paletas</h3>
-            <img onclick="showInfo({{this.id}})" src="images/{{this.filename}}">
+    <h4>Tipografías</h4>
+    <div class="contenedor-uploadsCarpeta">
+    {{#each tipografias}}
+        <div id="tipografia" class="contenedor-archivo">
+            <img src="uploads/tipografias/{{this}}" class="img-upload" title="{{this}}">
+            <button class="boton" onclick="borrarArchivo({{this}})">Borrar</button>
         </div>
     {{/each}}
+    </div>
 
-    {{#each listaBocetos}}
-        <div id="uploads-bocetos">
-            <h3>Bocetos</h3>
-            <img onclick="showInfo({{this.id}})" src="images/{{this.filename}}">
+    <h4>Paletas</h4>
+    <div class="contenedor-uploadsCarpeta">
+    {{#each paletas}}
+        <div id="paleta" class="contenedor-archivo">
+            <img src="uploads/paletas/{{this}}" class="img-upload" title="{{this}}">
+            <button class="boton" onclick="borrarArchivo({{this}})">Borrar</button>
         </div>
     {{/each}}
-    -->
-    
+    </div>
+
+    <h4>Bocetos</h4>
+    <div class="contenedor-uploadsCarpeta">
+    {{#each bocetos}}
+        <div id="boceto" class="contenedor-archivo">
+            <img src="uploads/bocetos/{{this}}" class="img-upload" title="{{this}}">
+            <button class="boton" onclick="borrarArchivo({{this}})">Borrar</button>
+        </div>
+    {{/each}}
+    </div>
 </div>
 
-<script>
-    // TODO: funcion delete y funcion zoom in
+<script> // TODO: funcion delete y funcion zoom in
+    
+/*
+function borrarArchivo(){       
+
+    var boceto = document.getElementById("boceto");
+    console.log(boceto);
+    
+    fs.unlink(`./public/uploads/bocetos/${boceto}`, (error) => {
+        if (error) {
+        failure(`No se ha podido borrar el archivo${this.filename}`);
+        }
+        succes(console.log(`Deleted ${this.filename}!`));
+    });
+   
+
+//const fs = require('fs-extra');
+
+
+/**
+ * Función que consulta y devuelve el array de archivos en la carpeta /bocetos
+ * 
+ * @param {function} success Callback para resultado ok
+ * @param {function} failure Callback para error
+ */
+/*function borrarArchivo(filename) {
+	
+	fs.remove(`uploads/bocetos/${filename}`)
+    .then(() => {
+        console.log('success!')
+    })
+    .catch(err => {
+        console.error(err)
+    })
+
+}
+*/
+
 </script>
