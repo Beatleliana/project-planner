@@ -105,7 +105,7 @@ app.post('/login', (req, res) => {
   if (req.body.user !== undefined && req.body.password !== undefined) {
 
     // Si es así, llamo a la función validar usuario
-    login.validarUsuario(req.body.user, req.body.password,
+    login.loggearUsuario(req.body.user, req.body.password,
       
       // Callback de éxito si validó bien. Guarda la sesión e indica navegar al home
       function() {
@@ -168,6 +168,7 @@ app.get('/home', (req, res) => {
 
   // Cuando quiere ir a home, valido sesión.
   if (req.session.userId !== undefined) {
+
     var listaData = [];
     fs.readdir(`./public/uploads`, (err, carpetas) => {
       //por cada carpeta dentro de la uploads le agrego el nombre del usuario
