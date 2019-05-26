@@ -550,15 +550,14 @@ footer {
     display: flex;
     flex-flow: column wrap;
     align-items: center;
-    border: 2px solid red;
-    width: 20%;
+    /*border: 2px solid red;*/
+    width: 100px;
     
 
 }
 
 .img-upload{
-    width: 50%;
-    
+    width: 150px;
 }
 
 
