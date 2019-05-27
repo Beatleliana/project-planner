@@ -19,10 +19,9 @@
             <h3>¿Vas a empezar un nuevo proyecto de diseño?<br>Te ayudamos a organizarlo</h3>
         <div class="contenedor-botones">
             <button class="boton" id="botonSignIn" onclick="getModalInicio()">INICIAR SESIÓN</button>
-    
         </div>
-        
-        <!--modal del login sin form-->
+
+        <!--modal del login-->
         <div id="modalSignIn" class="modal">
             <div class="modal-contenido">
                 <span id="cerrarSignIn" class="close-modal"><img src="img/close.png"></span>
@@ -35,23 +34,22 @@
                         <input type="submit" id="do-login" name="Login" class="boton">
                     </form>
                     <p><a href="" style="color:dodgerblue">¿Olvidaste tu contraseña?</a></p>
-                    <div class="error-message" id="error-message"></div>
                 </div>
             </div>
         </div>
 
-        <!--modal del registro con form-->
+        <!--modal del registro-->
         <div id="modalSignUp" class="modal">
             <div class="modal-contenido">
                 <span id="cerrarSignUp" class="close-modal"> <img src="img/close.png"> </span>
                 <div id="form-usuario-registro" class="form-usuario">
                     <h2>REGISTRATE</h2>
                     <form action="/signup" method="post">
-                        <input type="text" placeholder="Usuario" required>
-                        <input type="text" placeholder="E-mail" required>
-                        <input type="password" placeholder="Crear contraseña" required>
-                        <input type="password" placeholder="Repetir contraseña" required>
-                        <input type="submit" id="do-singup" name="SignUp" class="boton" onclick="doSignUp()">Registrarme</input>
+                        <input type="text" name="user" placeholder="Usuario" required>
+                        <input type="text" name="e-mail" placeholder="E-mail" required>
+                        <input type="password" name="password" placeholder="Crear contraseña" required>
+                        <input type="password" name="repeatpsw" placeholder="Repetir contraseña" required>
+                        <input type="submit" id="do-singup" name="SignUp" class="boton">
                     </form>
                     <p>Al registrarte, aceptás los <br> <a href="" style="color:dodgerblue">Términos y condiciones</a>.</p>
                     

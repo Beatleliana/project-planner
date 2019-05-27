@@ -6,12 +6,10 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 // Generador de vistas
 const exphbs = require('express-handlebars');
-
+// Manejo de sesiones
 const expressSession = require('express-session');
 const fs = require('fs');
 
-// extended: false significa que parsea solo string (no archivos de imagenes por ejemplo)
-var urlencodedParser = bodyParser.urlencoded({ extended: true });
 
 // JS propios
 const login = require('./login');
@@ -19,9 +17,9 @@ const uploadedFiles = require('./uploads');
 
 
 
-
 // Middleware de body-parser para json
 app.use(bodyParser.json());
+// extended: false significa que parsea solo string (no archivos de imagenes por ejemplo)
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Ruta para recursos estáticos.
@@ -59,39 +57,6 @@ app.set('views', path.join(__dirname, '../views'));
 app.get('/', (req, res) => {
   res.redirect('/home');
 });
-
-
-
-/* LOGIN */ 
-
-// Declaro variable global vacía que contendrá el nombre del user
-//var user = "";
-
-/*
-// POST /login
-app.post('/login', (req, res) => {
-  console.log(req.body);
-  user = req.body.user;
-  if (req.body.user !== undefined && req.body.password !== undefined) {
-    if (login.validarUsuario(req.body.user, req.body.password)) {
-      res.send('/home');
-    } else {
-      res.sendStatus(403);
-    }
-  } else {
-    res.status(403).end();
-  }
-});
-*/
-/*
-// GET a /home, renderiza un HTML de home
-app.get('/home', (req, res) => {
-  res.render('home', {
-    title: 'PP - Home',
-    user: `<i>${user}</i>`}
-  )
-});
-*/
 
 
 
@@ -152,7 +117,7 @@ app.post('/signup', (req, res) => {
         res.redirect('/home');
       },
       
-      // Callback de error si registró mal, se destruye la sesión (si la hubiera) y redirige a página inicial
+      // Callback de error si registró mal, se destruye la sesión (si la hubiera) y redirige al index
       function() {
         console.log('Error al registrar el usuario');
         req.session.destroy();
@@ -165,46 +130,21 @@ app.post('/signup', (req, res) => {
 
 // GET /home
 app.get('/home', (req, res) => {
+  
+  // Cuando quiere ir a home, valido la sesión
+  if (req.session.userId !== undefined) {  
 
-  // Cuando quiere ir a home, valido sesión.
-  if (req.session.userId !== undefined) {
-
-    var listaData = [];
-    fs.readdir(`./public/uploads`, (err, carpetas) => {
-      //por cada carpeta dentro de la uploads le agrego el nombre del usuario
-      carpetas.forEach(Usuario => {
-        //lee la carpeta con el nombre de usuario ubicada en uploads
-        fs.readdir(`./public/uploads/${Usuario}`, (err, carpetasUsuario) => {    
-          //si existen archivos dentro de la carpeta anterior
-          if(carpetasUsuario.length>=0 && carpetasUsuario.length<=3) {
-            //por cada objeto que se encuentra
-            carpetasUsuario.forEach(Proyecto => {
-              //registro los datos recolectados en la lista de objetos "listaDiscos"            
-              listaData.push({
-                  usuario : Usuario,
-                  nombre : Proyecto
-              });
-            });
-          }
-        })
-      })
-    })
-      // Renderiza el home, recibe como dato el nombre del usuario
+      // Si existe ese usuario, renderizo la home y le paso como dato su nombre
       res.render('home', {
         title: 'PP - Home',
         username: req.session.userId
       });
+    
     } else {
-        //renderizo el handlebars de gallery-NoFile con los parametros de usuario, listaDiscos y playlist
-        res.render('home-NoFile',{
-            title: 'No hay archivos subidos al servidor',
-            usuario: req.session.userId,
-            listaData: listaData,
-        })
+        // Caso contrario, redirecciono al index
+        res.redirect('/');
       }
   })
-
-
 
 
 
@@ -223,7 +163,7 @@ app.get('/descripcion', (req, res) => {
 });
 
 // POST del form-proyecto, toma datos enviados por el usuario y los reinterpreta como objeto que se renderiza
-app.post('/descripcion', urlencodedParser, (req, res) => {
+app.post('/descripcion', (req, res) => {
   // Chequeo que el request del form no venga vacío o undefined 
   if (req.body != "" && req.body != undefined) {
     // Armo un objeto de respuesta

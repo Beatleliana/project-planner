@@ -186,6 +186,7 @@ footer {
             }
 
 
+
 .boton {
     margin-top: 28px;
     margin-bottom: 10px;
@@ -207,6 +208,7 @@ footer {
     transition: 0.1s ease;
     outline: none;
 }
+
 
 
 .contenedor {
@@ -376,7 +378,7 @@ footer {
         font-size: 15px;
     }
 
-    #form-proyecto input {
+    #form-proyecto input[type="text"] {
         background: none;
         border: none;
         border-bottom: 1px solid #AAA;
@@ -385,11 +387,6 @@ footer {
         width: 250px; 
         padding: 12px 8px;
         font-family: 'Roboto', sans-serif;
-    }
-    #form-proyecto input:focus {
-        border-bottom: 2px solid #16a085;
-        color: #16a085;
-        transition: 0.2s ease;
     }
 
     #form-proyecto textarea {

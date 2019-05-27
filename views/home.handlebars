@@ -13,7 +13,7 @@
             <li> <label for="proyect-condicionantes">Condicionantes</label>
                 <textarea name="condicionantes" placeholder="Escriba aquí sus comentarios" required></textarea> </li>
         </ul>
-        <button type="submit" class="boton">Continuar</button>
+        <input type="submit" name="Continue" class="boton">
         </form>
     </div>
 </div>
@@ -23,11 +23,11 @@
     function mostrarForm() {
         let formProyecto = document.getElementById("form-proyecto");
 
-            if(formProyecto.style.display == "none") {
-                formProyecto.style.display = "block";
-            
-            } else if(formProyecto.style.display == "block") {
-                formProyecto.style.display = "none";
-            }
+        if(formProyecto.style.display == "none") {
+            formProyecto.style.display = "block";
+        
+        } else if(formProyecto.style.display == "block") {
+            formProyecto.style.display = "none";
+        }
     }
 </script>
