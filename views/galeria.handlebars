@@ -3,7 +3,7 @@
     <div class="contenedor-uploadsCarpeta">
     {{#each referentes}}
         <div id="referente" class="contenedor-archivo">
-            <img src="uploads/referentes/{{this}}" class="img-upload" title="{{this}}">
+            <img src="uploads/{{../username}}/referentes/{{this}}" class="img-upload" title="{{this}}">
             <button class="boton" onclick="borrarArchivo({{this}})">Borrar</button>
         </div>
     {{/each}}
@@ -13,7 +13,7 @@
     <div class="contenedor-uploadsCarpeta">
     {{#each tipografias}}
         <div id="tipografia" class="contenedor-archivo">
-            <img src="uploads/tipografias/{{this}}" class="img-upload" title="{{this}}">
+            <img src="uploads/{{../username}}/tipografias/{{this}}" class="img-upload" title="{{this}}">
             <button class="boton" onclick="borrarArchivo({{this}})">Borrar</button>
         </div>
     {{/each}}
@@ -23,7 +23,7 @@
     <div class="contenedor-uploadsCarpeta">
     {{#each paletas}}
         <div id="paleta" class="contenedor-archivo">
-            <img src="uploads/paletas/{{this}}" class="img-upload" title="{{this}}">
+            <img src="uploads/{{../username}}/paletas/{{this}}" class="img-upload" title="{{this}}">
             <button class="boton" onclick="borrarArchivo({{this}})">Borrar</button>
         </div>
     {{/each}}
@@ -33,7 +33,7 @@
     <div class="contenedor-uploadsCarpeta">
     {{#each bocetos}}
         <div id="boceto" class="contenedor-archivo">
-            <img src="uploads/bocetos/{{this}}" class="img-upload" title="{{this}}">
+            <img src="uploads/{{../username}}/bocetos/{{this}}" class="img-upload" title="{{this}}">
             <button class="boton" onclick="borrarArchivo({{this}})">Borrar</button>
         </div>
     {{/each}}

@@ -9,11 +9,13 @@ const dbURL = "mongodb://localhost:27017"
  * 
  * @param {string} user Usuario
  * @param {string} password Clave
+ * @param {function} cbOK Callback de exito
+ * @param {function} cbErr Callback de error
  */
 function loggearUsuario(user, password, cbOK, cbErr) {
 
   // Se conecta al motor de base de datos
-  MongoClient.connect(dbURL, (err, client) => {
+  MongoClient.connect(dbURL, { useNewUrlParser: true }, (err, client) => {
 
     // Trae referencia a la base
     const db = client.db("testdb");
@@ -44,11 +46,14 @@ function loggearUsuario(user, password, cbOK, cbErr) {
  * 
  * @param {string} user Usuario
  * @param {string} password Clave
+ * @param {function} cbOK Callback de exito
+ * @param {function} cbErr Callback de error
+ * @param {function} cbVacio Callback de error si no se enviaron datos
  */
 function registrarUsuario(user, password, cbOK, cbErr, cbVacio) {
   
   // Se conecta al motor de base de datos
-  MongoClient.connect(dbURL, (err, client) => {
+  MongoClient.connect(dbURL, { useNewUrlParser: true }, (err, client) => {
 
     // Trae referencia a la base
     const db = client.db("testdb");
@@ -64,9 +69,10 @@ function registrarUsuario(user, password, cbOK, cbErr, cbVacio) {
         
         if (data.length == 0) {
           // Si no encontró un registro con ese usuario y clave, invoco al callback de exito
-          collUser.insert({
+          collUser.insertOne({
             username : user,
-            password : password
+            password : password,
+            
           })
           cbOK();
           client.close()
