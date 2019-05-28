@@ -1,13 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 
-// Armo una constante de cada directorio de uploads
-const tipografiasData = path.join(__dirname, `../public/uploads/${username}/tipografias`);
-const referentesData = path.join(__dirname, `../public/uploads/${username}/referentes`);
-const paletasData = path.join(__dirname, `../public/uploads/${username}/paletas`);
-const bocetosData = path.join(__dirname, `../public/uploads/${username}/bocetos`);
-
-
 /**
  * Función que consulta y devuelve el array de archivos en la carpeta /referentes
  * 
@@ -18,7 +11,7 @@ function getTipografias() {
 	
 	return new Promise((resolve, reject) => {
 
-		fs.readdir(tipografiasData, (err, listaTipografias) => { 
+		fs.readdir(path.join(__dirname,`../public/uploads/${username}/tipografias`), (err, listaTipografias) => { 
 			if (!err) {
 				resolve(listaTipografias);
 			} else {
@@ -39,7 +32,7 @@ function getReferentes() {
 	
 	return new Promise((resolve, reject) => {
 
-		fs.readdir(referentesData, (err, listaReferentes) => { 
+		fs.readdir(path.join(__dirname, `../public/uploads/${username}/referentes`), (err, listaReferentes) => { 
 			if (!err) {
 				resolve(listaReferentes);
 			} else {
@@ -61,7 +54,7 @@ function getPaletas() {
     
 	return new Promise((resolve, reject) => {
 
-		fs.readdir(paletasData, (err, listaPaletas) => { 
+		fs.readdir(path.join(__dirname, `../public/uploads/${username}/paletas`), (err, listaPaletas) => { 
 			if (!err) {
 				resolve(listaPaletas);
 			} else {
@@ -83,7 +76,7 @@ function getBocetos() {
 	
 	return new Promise((resolve, reject) => {
 
-		fs.readdir(bocetosData, (err, listaBocetos) => { 
+		fs.readdir(path.join(__dirname, `../public/uploads/${username}/bocetos`), (err, listaBocetos) => { 
 			if (!err) {
 				resolve(listaBocetos);
 			} else {
@@ -102,22 +95,22 @@ function getBocetos() {
  * @param {function} success Callback para resultado ok
  * @param {function} failure Callback para error
  */
-function getAllFiles(success, failure) {
+function getAllFiles(success, failure, username) {
+  //let username = req.session.userId;
+  // Defino una variable que contenga un array con las 4 funciones anteriores que retornan promesas
+  let arrayPromesas = [getTipografias(username), getReferentes(username), getPaletas(username), getBocetos(username)];
 
-        // Defino una variable que contenga un array con las 4 funciones anteriores que retornan promesas
-        let arrayPromesas = [getTipografias(), getReferentes(), getPaletas(), getBocetos()];
-
-        // El Promise.all crea una promesa nueva que se va a resolver cuando se resuelvan todas ok o falle alguna
-        Promise.all(arrayPromesas)
-          .then( listaDatos => {
-            // Si todas salieron bien, devuelvo el array de resultados
-            success(listaDatos);
-          })
-          .catch( mensajeError => {
-            // Si hubo alguna falla, ejecuto el cb de error con su mensaje
-            failure(mensajeError)
-          });
-        }
+  // El Promise.all crea una promesa nueva que se va a resolver cuando se resuelvan todas ok o falle alguna
+  Promise.all(arrayPromesas)
+    .then( (listaDatos) => {
+      // Si todas salieron bien, devuelvo el array de resultados
+      success(listaDatos);
+    })
+    .catch( mensajeError => {
+      // Si hubo alguna falla, ejecuto el cb de error con su mensaje
+      failure(mensajeError)
+    });
+  }
 
 /*Armo el objeto a exportar, q se convertirá en módulo del archivo ppal "server.js" al hacer require de este js.*/
 module.exports = { getAllFiles: getAllFiles }

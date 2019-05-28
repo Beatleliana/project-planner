@@ -69,7 +69,7 @@ app.post('/login', (req, res) => {
 
   // Chequeo que el form tenga info en los campos "user" y "password"
   if (req.body.user !== undefined && req.body.password !== undefined) {
-
+    
     // Si es así, llamo a la función para logear al usuario
     login.loggearUsuario(req.body.user, req.body.password,
       
@@ -204,8 +204,9 @@ app.get('/subida-archivos', (req, res) => {
     // Si existe ese usuario, renderizo la home y le paso como dato su nombre
     res.render('subida-archivos', {
       title: 'PP - Subida de archivos',
-      username: req.session.userId
+      username: req.session.userId,
     });
+
   } else {
     // Caso contrario, redirecciono al index
     res.redirect('/');
@@ -245,32 +246,54 @@ const upload = multer({storage:storage});
 // POST /referentes, archivos subidos por el form de referentes
 // tomo la variable upload con la propiedad array de multer que permite subir un array de archivos
 app.post('/referentes', upload.array('image'), (req, res) => {
-
-  console.log("Subiendo archivo...");
-  // Chequeo por consola el objeto que se sube
-  console.log(req.files);
-
+   
+  // Chequeo que haya un usuario logueado
   if (req.session.userId !== undefined) {
+    // Creo una variable para guardar el userId
+    var username = req.session.userId;
+    console.log("este es el username:"+username);
     
-    req.session.userId = username;
-    
-    fs.mkdir(`./public/uploads/${username}/referentes/`, (err, carpetaUser) => {
-      if (!err) {
-      resolve(carpetaUser);
+    // Creo un directorio de ese usuario, previo chequear que no exista
+    /*if (!fs.existsSync(`./public/uploads/${username}/referentes`)){
+      fs.mkdirSync(`./public/uploads/${username}/referentes`);
+    } else {
+    console.log(`error al crear carpeta referentes de ${username}, ya existe`);
+    };*/
+
+    // Creo un directorio de ese usuario
+    fs.mkdir(`./public/uploads/${username}/referentes`, (err) => {
+      if (err) {
+        console.log("error al crear la carpeta referentes del usuario");
       } else {
-        console.log(error);
-        reject(`Error al crear carpeta referentes de ${username}`)
+      console.log("creo carpeta referentes");
       }
     });
 
     // Chequeo si ese objeto está vacio o undefined, para renderizar una vista de ok o error
     if(req.files !="" && req.files !=undefined) {
+
+      console.log("Subiendo archivo...");
+      // Chequeo por consola el objeto que se sube
+      console.log(req.files);
+
+      //var username = req.body.userlogeado; --> valor en el form
+
       // Ejecuto un for en ese objeto para recorrerlo
       for(let x = 0; x < req.files.length; x++) {
         console.log("Guardando archivo en la carpeta de destino...")
         
+        //fs.renameSync(`./public/uploads/${username}/${req.files[x].filename}`, `./public/uploads/${username}/referentes/${req.files[x].originalname}`);
+
+        fs.rename(`./public/uploads/${username}/${req.files[x].filename}`, `./public/uploads/${username}/referentes/${req.files[x].originalname}`, (err) => {
+          if (err) {
+            console.log("error al rename old path to new path")
+          } else {
+            console.log("exito del rename");
+          }
+        })
+        
         // el archivo subido a la carpeta general uploads, lo copio en la carpeta definitiva donde se almacena
-        fs.createReadStream(`./public/uploads/${req.files[x].filename}`).pipe(fs.createWriteStream(`./public/uploads/${username}/referentes/${req.files[x].originalname}`)); 
+        /*fs.createReadStream(`./public/uploads/${req.files[x].filename}`).pipe(fs.createWriteStream(`./public/uploads/${username}/referentes/${req.files[x].originalname}`)); 
         console.log(`El nombre del archivo es: ${req.files[x].filename}`);
         console.log("Borrando archivo temporal...");
         
@@ -282,37 +305,23 @@ app.post('/referentes', upload.array('image'), (req, res) => {
           else {
             console.log("Se borró el archivo temporal con exito")
           }
-        });
+        });*/
+        
       }
-    
-    // Renderizo una vista q toma sus nombres y da mensaje de ok
-      res.render('uploadOk', {listaUploads: req.files})
+      // Renderizo una vista q toma sus nombres y da mensaje de ok
+        res.render('uploadOk', {listaUploads: req.files})
       } else {
         res.render('error');
+        console.log()
       }
-    }
+
+  } else {
+    // Caso contrario, redirecciono al index
+    res.redirect('/');
+  } 
 })
 
-/* TRATO de hacer una funcion que cree la carpeta del usuario
-function crearCarpetaUsuario (cbOk, cbError) {
-  
-  if (req.session.userId !== undefined) {
-     
-      req.session.userId = username;
-      fs.mkdir(`./public/uploads/${username}/referentes/`, (err, carpetaUser) => {
-        if (!err) {
-        cbOk(carpetaUser);
-        } else {
-          console.log(error);
-          cbError(`Error al crear carpeta referentes de ${username}`)
-        }
-      })
-    })
-  } else {
-    cbError("error al ejectuar funcion crearCarpetaUsuario, no existe usuario")
-  }
-}
-*/
+
 
 // POST /tipografias, archivos subidos por el form de referentes
 // Mismo procedimiento que con /referentes
@@ -424,14 +433,14 @@ app.get('/galeria', (req, res) => {
 
   // Chequeo que un usuario esté logeado para acceder a la ruta
   if (req.session.userId !== undefined) {  
-  
+    const username = req.session.userId;
     // Llamo a la función modulo para traerme todos los archivos
     uploadedFiles.getAllFiles(
       // Tomo el resultado que es un array con los archivos de cada carpeta, su índice 0, 1, 2, 3, corresponde a cada una de estas
-      listaDatos => {
+      (listaDatos) => {
         // Renderizo una vista a la que le paso como objeto ese array, indicando el índice segun la carpeta deseada
         res.render ('galeria', {
-          username: req.session.userId,
+          username: username,
           tipografias: listaDatos[0],
           referentes: listaDatos[1],
           paletas: listaDatos[2],
@@ -449,6 +458,7 @@ app.get('/galeria', (req, res) => {
         });
       }
     );
+    
   } else {
     // Caso contrario, redirecciono al index
     res.redirect('/');

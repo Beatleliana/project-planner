@@ -3,28 +3,29 @@
         <h4>Referentes</h4>
         <form id="form-upload-referentes" enctype="multipart/form-data" action="/referentes" method="post">
             <input type="file" name="image" id="imagen" multiple="true"/>
-            <input type="submit" value="Upload" name="submit" class="boton">
+            <input type="submit" name="submit" class="boton" value="Upload">
+            <input type="text" name="userlogeado" id="userlog" value="{{username}}" >
         </form>
     </div>
     <div class="form-upload">
         <h4>Tipografías</h4>
         <form id="form-upload-typo" enctype="multipart/form-data" action="/tipografias" method="post">
             <input type="file" name="image" multiple="true"/>
-            <input type="submit" value="Upload" name="submit" class="boton">
+            <input type="submit" name="submit" class="boton" value="Upload">
         </form>
     </div>
     <div class="form-upload">
         <h4>Paletas</h4>
         <form id="form-upload-paletas" enctype="multipart/form-data" action="/paletas" method="post">
             <input type="file" name="image" multiple="true"/>
-            <input type="submit" value="Upload" name="submit" class="boton">
+            <input type="submit" name="submit" class="boton" value="Upload">
         </form>
     </div>
     <div class="form-upload">
         <h4>Bocetos</h4>
         <form id="form-upload-bocetos" enctype="multipart/form-data" action="/bocetos" method="post">
             <input type="file" name="image" multiple="true"/>
-            <input type="submit" value="Upload" name="submit" class="boton">
+            <input type="submit" name="submit" class="boton" value="Upload">
         </form>
     </div>
 </div>
