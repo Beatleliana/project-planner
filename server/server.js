@@ -27,28 +27,25 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 
 
-// Manejo de sesión en Express con opciones bastante default, que no interesa
-// ahora profundizar, que definen el comportamiento ante ciertas ocasiones, más
-// bien orientadas a cuestiones de seguridad.
+// Manejo de sesión con opciones que definen el comportamiento ante ciertas ocasiones, más bien orientadas a cuestiones de seguridad
 app.use(expressSession({
-  secret: 'esta propiedad puede tener LITERALMENTE CUALQUIER COSA',
+  secret: 'all work and no play makes eliana a dull girl',
   resave: false,
   saveUninitialized: false
 }))
 
 
 
-/* Configuramos vistas con Handlebars */
+/* Configuro vistas con Handlebars */
 
-// Acá indicamos el motor, layout (base) default y carpeta de
-// ese y otros layouts que hubiera
+// Indico el motor, layout (base) default y carpeta de ese y otros layouts que hubiera
 app.engine('handlebars', exphbs({
   defaultLayout: 'main-layout',
   layoutsDir: path.join(__dirname, '../views/layouts')
 }));
-// Acá seteamos como motor de renderizado de vistas "handlebars"
+// Seteo "handlebars" como motor de renderizado de vistas 
 app.set('view engine', 'handlebars')
-// Y acá seteamos la carpeta para las vistas
+// Seteo la carpeta para esas vistas
 app.set('views', path.join(__dirname, '../views'));
 
 
@@ -61,10 +58,12 @@ app.get('/', (req, res) => {
 
 
 
+/* Inicialización de la sesión, login y sign up de usuario */
 
-// POST /login, recibo la info del form de logueo
+// POST /login, recibo la info del form de logueo del usuario
 app.post('/login', (req, res) => {
   
+  // Chequeo por consola el objeto de respuesta por las dudas
   console.log(req.body);
 
   // Chequeo que el form tenga info en los campos "user" y "password"
@@ -93,7 +92,7 @@ app.post('/login', (req, res) => {
 // GET logout
 app.get('/logout', (req, res) => {
 
-  // Destruyo sesión y redirijo al login.
+  // Destruyo sesión y redirijo al login
   req.session.destroy();
   res.redirect("/");
 
@@ -101,7 +100,7 @@ app.get('/logout', (req, res) => {
 
 
 
-// POST /singup, recibo la info del form de registro
+// POST /singup, recibo la info del form de registro del usuario y creo sus carpetas correspondientes
 app.post('/signup', (req, res) => {
 
   console.log(req.body);
@@ -109,7 +108,16 @@ app.post('/signup', (req, res) => {
   // Chequeo que el form tenga info en los campos "user" y "password"
   if (req.body.user !== undefined && req.body.password !== undefined) {
     
-    // Si es así, llamo a la función registrar usuario
+    // TODO: chequear que no exista anteriormente un directorio, y controlar errores
+    // Creo un directorio para ese usuario y sus subcarpetas
+    fs.mkdir(`./public/uploads/${req.body.user}`, () => {
+      fs.mkdir(`./public/uploads/${req.body.user}/referentes`, () => {});
+      fs.mkdir(`./public/uploads/${req.body.user}/tipografias`, () => {});
+      fs.mkdir(`./public/uploads/${req.body.user}/bocetos`, () => {});
+      fs.mkdir(`./public/uploads/${req.body.user}/paletas`, () => {});
+    })
+
+    // Llamo a la función registrar usuario
     login.registrarUsuario(req.body.user, req.body.password,
       
       // Callback de éxito si registró bien. Guarda la sesión e indica navegar al home
@@ -118,7 +126,7 @@ app.post('/signup', (req, res) => {
         res.redirect('/home');
       },
       
-      // Callback de error si registró mal, se destruye la sesión (si la hubiera) y redirige al index
+      // Callback de error si registró mal, se destruye sesión si la hubiera y redirige al index
       function() {
         console.log('Error al registrar el usuario');
         req.session.destroy();
@@ -149,16 +157,12 @@ app.get('/home', (req, res) => {
 
 
 
-
-
-
-
-/* Form de la descripcion proyecto */
+/* Descripción del proyecto */
 
 // Declaro variable global vacía que contendrá los datos enviados del form
 var replyFormDescripcion = "";
 
-// GET a /descripcion, renderiza un HTML de con el objeto de los datos del form
+// GET a /descripcion, renderiza un HTML con el objeto de los datos del form que describen el proyecto
 app.get('/descripcion', (req, res) => {
   
   // Chequeo que haya un usuario logeado para acceder a la ruta
@@ -176,7 +180,7 @@ app.get('/descripcion', (req, res) => {
 });
 
 
-// POST del form-proyecto, toma datos enviados por el usuario y los reinterpreta como objeto que se renderiza
+// POST del form-proyecto, toma datos enviados por el usuario y los reinterpreta como objeto que se renderiza en una vista
 app.post('/descripcion', (req, res) => {
   // Chequeo que el request del form no venga vacío o undefined 
   if (req.body != "" && req.body != undefined) {
@@ -192,7 +196,6 @@ app.post('/descripcion', (req, res) => {
     res.render('error');
   }
 });
-
 
 
 // GET a /subida-archivos, renderiza un HTML con datos que obtiene de un archivo
@@ -243,6 +246,7 @@ const storage = multer.diskStorage({
 const upload = multer({storage:storage});
 
 
+// TODO: chequear vista de error y controlar error de sesion
 // POST /referentes, archivos subidos por el form de referentes
 // tomo la variable upload con la propiedad array de multer que permite subir un array de archivos
 app.post('/referentes', upload.array('image'), (req, res) => {
@@ -251,68 +255,38 @@ app.post('/referentes', upload.array('image'), (req, res) => {
   if (req.session.userId !== undefined) {
     // Creo una variable para guardar el userId
     var username = req.session.userId;
-    console.log("este es el username:"+username);
+    console.log(`El usuario ${username} esta subiendo un archivo a /referentes`);
     
-    // Creo un directorio de ese usuario, previo chequear que no exista
-    /*if (!fs.existsSync(`./public/uploads/${username}/referentes`)){
-      fs.mkdirSync(`./public/uploads/${username}/referentes`);
-    } else {
-    console.log(`error al crear carpeta referentes de ${username}, ya existe`);
-    };*/
-
-    // Creo un directorio de ese usuario
-    fs.mkdir(`./public/uploads/${username}/referentes`, (err) => {
-      if (err) {
-        console.log("error al crear la carpeta referentes del usuario");
-      } else {
-      console.log("creo carpeta referentes");
-      }
-    });
-
     // Chequeo si ese objeto está vacio o undefined, para renderizar una vista de ok o error
     if(req.files !="" && req.files !=undefined) {
 
-      console.log("Subiendo archivo...");
+      console.log(`Subiendo archivo(s)...`);
       // Chequeo por consola el objeto que se sube
       console.log(req.files);
-
-      //var username = req.body.userlogeado; --> valor en el form
-
+      
       // Ejecuto un for en ese objeto para recorrerlo
       for(let x = 0; x < req.files.length; x++) {
-        console.log("Guardando archivo en la carpeta de destino...")
-        
-        //fs.renameSync(`./public/uploads/${username}/${req.files[x].filename}`, `./public/uploads/${username}/referentes/${req.files[x].originalname}`);
-
-        fs.rename(`./public/uploads/${username}/${req.files[x].filename}`, `./public/uploads/${username}/referentes/${req.files[x].originalname}`, (err) => {
-          if (err) {
-            console.log("error al rename old path to new path")
-          } else {
-            console.log("exito del rename");
-          }
-        })
+        console.log(`Guardando archivo ${req.files[x].filename} en la carpeta de destino...`)
         
         // el archivo subido a la carpeta general uploads, lo copio en la carpeta definitiva donde se almacena
-        /*fs.createReadStream(`./public/uploads/${req.files[x].filename}`).pipe(fs.createWriteStream(`./public/uploads/${username}/referentes/${req.files[x].originalname}`)); 
-        console.log(`El nombre del archivo es: ${req.files[x].filename}`);
-        console.log("Borrando archivo temporal...");
+        fs.createReadStream(`./public/uploads/${req.files[x].filename}`).pipe(fs.createWriteStream(`./public/uploads/${username}/referentes/${req.files[x].originalname}`));
+        console.log(`Borrando archivo temporal ${req.files[x].filename}...`);
         
         // borro ese archivo temporal subido a la carpeta general
         fs.unlink((`./public/uploads/${req.files[x].filename}`), (err) => {
           if (err){
-            console.log("No se borró el archivo temporal");
+            console.log(`No se borró el archivo temporal ${req.files[x].filename}`);
           }
           else {
-            console.log("Se borró el archivo temporal con exito")
+            console.log(`Se borró el archivo temporal con exito de ${req.files[x].filename}`);
           }
-        });*/
+        });
         
       }
       // Renderizo una vista q toma sus nombres y da mensaje de ok
         res.render('uploadOk', {listaUploads: req.files})
       } else {
         res.render('error');
-        console.log()
       }
 
   } else {
@@ -321,123 +295,146 @@ app.post('/referentes', upload.array('image'), (req, res) => {
   } 
 })
 
-
-
-// POST /tipografias, archivos subidos por el form de referentes
-// Mismo procedimiento que con /referentes
-app.post('/tipografias', upload.array('image'), (req, res) => {
-
-  console.log("Subiendo archivo...");
-  console.log(req.files);
-
-  if(req.files !="" && req.files !=undefined) {
-
-    for(let x = 0; x < req.files.length; x++) {
-      console.log("Guardando archivo en la carpeta de destino...")
-      
-      // solo cambio la carpeta donde se almacena por uploads/tipografias
-      fs.createReadStream(`./public/uploads/${req.files[x].filename}`).pipe(fs.createWriteStream(`./public/uploads/${username}/tipografias/${req.files[x].originalname}`)); 
-      console.log(`El nombre del archivo es: ${req.files[x].filename}`);
-      console.log("Borrando archivo temporal...");
-      
-      fs.unlink((`./public/uploads/${req.files[x].filename}`), (err) => {
-        if (err){
-          console.log("No se borró el archivo temporal");
-        }
-        else {
-          console.log("Se borró el archivo temporal con exito")
-        }
-      });
-    }
-    
-    res.render('uploadOk', {listaUploads: req.files})
-    } else {
-      res.render('error');
-    }
-})
-
-
-
-// POST /paletas, archivos subidos por el form de referentes
-// Mismo procedimiento que con /referentes
+// TODO: chequear vista de error y controlar error de sesion
+// POST /paletas, archivos subidos por el form de bocetos
+// Mismo procedimiento que con /referentes pero con otra ruta de destino, upload/username/paletas
 app.post('/paletas', upload.array('image'), (req, res) => {
+   
+  if (req.session.userId !== undefined) {
+    var username = req.session.userId;
+    console.log(`El usuario ${username} esta subiendo un archivo a /paletas`);
 
-  console.log("Subiendo archivo...");
-  console.log(req.files);
+    if(req.files != "" && req.files != undefined) {
 
-  if(req.files !="" && req.files !=undefined) {
+      console.log(`Subiendo archivo(s)...`);
+      console.log(req.files);
 
-    for(let x = 0; x < req.files.length; x++) {
-      console.log("Guardando archivo en la carpeta de destino...")
+      for(let x = 0; x < req.files.length; x++) {
+        console.log(`Guardando archivo ${req.files[x].filename} en la carpeta de destino...`)
+        
+        fs.createReadStream(`./public/uploads/${req.files[x].filename}`).pipe(fs.createWriteStream(`./public/uploads/${username}/paletas/${req.files[x].originalname}`));
+        console.log(`Borrando archivo temporal ${req.files[x].filename}...`);
+        
+        fs.unlink((`./public/uploads/${req.files[x].filename}`), (err) => {
+          if (err){
+            console.log(`No se borró el archivo temporal ${req.files[x].filename}`);
+          }
+          else {
+            console.log(`Se borró el archivo temporal con exito de ${req.files[x].filename}`)
+          }
+        });
       
-      // solo cambio la carpeta donde se almacena por uploads/paletas
-      fs.createReadStream(`./public/uploads/${req.files[x].filename}`).pipe(fs.createWriteStream(`./public/uploads/${username}/paletas/${req.files[x].originalname}`)); 
-      console.log(`El nombre del archivo es: ${req.files[x].filename}`);
-      console.log("Borrando archivo temporal...");
-      
-      fs.unlink((`./public/uploads/${req.files[x].filename}`), (err) => {
-        if (err){
-          console.log("No se borró el archivo temporal");
-        }
-        else {
-          console.log("Se borró el archivo temporal con exito")
-        }
-      });
-    }
-    
-    res.render('uploadOk', {listaUploads: req.files})
-    } else {
-      res.render('error');
-    }
+      }
+      res.render('uploadOk', {listaUploads: req.files});
+
+      } else {
+        res.render('error');
+      }
+
+  } else {
+    res.redirect('/');
+  }
 })
 
 
+// TODO: chequear vista de error y controlar error de sesion
+// POST /tipografias, archivos subidos por el form de bocetos
+// Mismo procedimiento que con /referentes pero con otra ruta de destino, upload/username/tipografias
+app.post('/tipografias', upload.array('image'), (req, res) => {
+   
+  if (req.session.userId !== undefined) {
+    var username = req.session.userId;
+    console.log(`El usuario ${username} esta subiendo un archivo a /tipografias`);
 
-// POST /bocetos, archivos subidos por el form de referentes
-// Mismo procedimiento que con /referentes
+    if(req.files != "" && req.files != undefined) {
+
+      console.log(`Subiendo archivo(s)...`);
+      console.log(req.files);
+
+      for(let x = 0; x < req.files.length; x++) {
+        console.log(`Guardando archivo ${req.files[x].filename} en la carpeta de destino...`)
+        
+        fs.createReadStream(`./public/uploads/${req.files[x].filename}`).pipe(fs.createWriteStream(`./public/uploads/${username}/tipografias/${req.files[x].originalname}`));
+        console.log(`Borrando archivo temporal ${req.files[x].filename}...`);
+        
+        fs.unlink((`./public/uploads/${req.files[x].filename}`), (err) => {
+          if (err){
+            console.log(`No se borró el archivo temporal ${req.files[x].filename}`);
+          }
+          else {
+            console.log(`Se borró el archivo temporal con exito de ${req.files[x].filename}`)
+          }
+        });
+      
+      }
+      res.render('uploadOk', {listaUploads: req.files});
+
+      } else {
+        res.render('error');
+      }
+
+  } else {
+    res.redirect('/');
+  }
+})
+
+
+// TODO: chequear vista de error y controlar error de sesion
+// POST /bocetos, archivos subidos por el form de bocetos
+// Mismo procedimiento que con /referentes pero con otra ruta de destino, upload/username/bocetos
 app.post('/bocetos', upload.array('image'), (req, res) => {
+   
+  if (req.session.userId !== undefined) {
+    var username = req.session.userId;
+    console.log(`El usuario ${username} esta subiendo un archivo a /bocetos`);
 
-  console.log("Subiendo archivo...");
-  console.log(req.files);
+    if(req.files != "" && req.files != undefined) {
 
-  if(req.files !="" && req.files !=undefined) {
+      console.log(`Subiendo archivo(s)...`);
+      console.log(req.files);
 
-    for(let x = 0; x < req.files.length; x++) {
-      console.log("Guardando archivo en la carpeta de destino...")
+      for(let x = 0; x < req.files.length; x++) {
+        console.log(`Guardando archivo ${req.files[x].filename} en la carpeta de destino...`)
+        
+        fs.createReadStream(`./public/uploads/${req.files[x].filename}`).pipe(fs.createWriteStream(`./public/uploads/${username}/bocetos/${req.files[x].originalname}`));
+        console.log(`Borrando archivo temporal ${req.files[x].filename}...`);
+        
+        fs.unlink((`./public/uploads/${req.files[x].filename}`), (err) => {
+          if (err){
+            console.log(`No se borró el archivo temporal ${req.files[x].filename}`);
+          }
+          else {
+            console.log(`Se borró el archivo temporal con exito de ${req.files[x].filename}`)
+          }
+        });
       
-      // solo cambio la carpeta donde se almacena por uploads/bocetos
-      fs.createReadStream(`./public/uploads/${req.files[x].filename}`).pipe(fs.createWriteStream(`./public/uploads/${username}/bocetos/${req.files[x].originalname}`)); 
-      console.log(`El nombre del archivo es: ${req.files[x].filename}`);
-      console.log("Borrando archivo temporal...");
-      
-      fs.unlink((`./public/uploads/${req.files[x].filename}`), (err) => {
-        if (err){
-          console.log("No se borró el archivo temporal");
-        }
-        else {
-          console.log("Se borró el archivo temporal con exito")
-        }
-      });
-    }
-    
-    res.render('uploadOk', {listaUploads: req.files})
-    } else {
-      res.render('error');
-    }
+      }
+      res.render('uploadOk', {listaUploads: req.files});
+
+      } else {
+        res.render('error');
+      }
+
+  } else {
+    res.redirect('/');
+  }
 })
 
 
 
+/* Vista de archivos subidos */ 
+// TODO: arreglar error: username is undefined
 // GET a galeria, que visualiza todas las imagenes subidas, de las 4 carpetas
 app.get('/galeria', (req, res) => {
 
   // Chequeo que un usuario esté logeado para acceder a la ruta
   if (req.session.userId !== undefined) {  
-    const username = req.session.userId;
+    
     // Llamo a la función modulo para traerme todos los archivos
     uploadedFiles.getAllFiles(
       // Tomo el resultado que es un array con los archivos de cada carpeta, su índice 0, 1, 2, 3, corresponde a cada una de estas
-      (listaDatos) => {
+      (listaDatos, username) => {
+         
         // Renderizo una vista a la que le paso como objeto ese array, indicando el índice segun la carpeta deseada
         res.render ('galeria', {
           username: username,
@@ -449,13 +446,9 @@ app.get('/galeria', (req, res) => {
       },
 
       mensajeError => {
-        mensajeError(`Error ${err.code} en la consulta de archivo: ${err.message}`);
-        // Tiro msj x consola si hay error
-        console.log(err);
         // Renderizo vista de error, llamo al callback correspondiente y su mensaje
-        res.render ('errorGaleria' , {
-          error: mensajeError
-        });
+        res.render ('errorGaleria' , { error: mensajeError });
+        console.log('Error al cargar galeria')
       }
     );
     

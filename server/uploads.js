@@ -1,5 +1,4 @@
 const fs = require('fs');
-const path = require('path');
 
 /**
  * Función que consulta y devuelve el array de archivos en la carpeta /referentes
@@ -11,7 +10,7 @@ function getTipografias() {
 	
 	return new Promise((resolve, reject) => {
 
-		fs.readdir(path.join(__dirname,`../public/uploads/${username}/tipografias`), (err, listaTipografias) => { 
+		fs.readdir(`./public/uploads/${username}/tipografias`, (err, listaTipografias) => { 
 			if (!err) {
 				resolve(listaTipografias);
 			} else {
@@ -32,7 +31,7 @@ function getReferentes() {
 	
 	return new Promise((resolve, reject) => {
 
-		fs.readdir(path.join(__dirname, `../public/uploads/${username}/referentes`), (err, listaReferentes) => { 
+		fs.readdir(`./public/uploads/${username}/referentes`, (err, listaReferentes) => { 
 			if (!err) {
 				resolve(listaReferentes);
 			} else {
@@ -54,7 +53,7 @@ function getPaletas() {
     
 	return new Promise((resolve, reject) => {
 
-		fs.readdir(path.join(__dirname, `../public/uploads/${username}/paletas`), (err, listaPaletas) => { 
+		fs.readdir(`./public/uploads/${username}/paletas`, (err, listaPaletas) => { 
 			if (!err) {
 				resolve(listaPaletas);
 			} else {
@@ -76,7 +75,7 @@ function getBocetos() {
 	
 	return new Promise((resolve, reject) => {
 
-		fs.readdir(path.join(__dirname, `../public/uploads/${username}/bocetos`), (err, listaBocetos) => { 
+		fs.readdir(`./public/uploads/${username}/bocetos`, (err, listaBocetos) => { 
 			if (!err) {
 				resolve(listaBocetos);
 			} else {
@@ -96,15 +95,15 @@ function getBocetos() {
  * @param {function} failure Callback para error
  */
 function getAllFiles(success, failure, username) {
-  //let username = req.session.userId;
+  
   // Defino una variable que contenga un array con las 4 funciones anteriores que retornan promesas
   let arrayPromesas = [getTipografias(username), getReferentes(username), getPaletas(username), getBocetos(username)];
 
   // El Promise.all crea una promesa nueva que se va a resolver cuando se resuelvan todas ok o falle alguna
   Promise.all(arrayPromesas)
-    .then( (listaDatos) => {
+    .then( (listaDatos, username) => {
       // Si todas salieron bien, devuelvo el array de resultados
-      success(listaDatos);
+      success(listaDatos, username);
     })
     .catch( mensajeError => {
       // Si hubo alguna falla, ejecuto el cb de error con su mensaje
