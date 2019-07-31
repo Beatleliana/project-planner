@@ -1,4 +1,4 @@
-# Proyecto Node --> "Proyect Planner"
+# Proyecto Node --> "Project Planner"
 Proyecto creado para un curso de Node.js
 El objetivo es generar una aplicación para gestionar proyectos de diseño, una herramienta que permita a un usuario, crear un proyecto con su respectiva descripción y a su vez pueda subir archivos relevantes a carpetas predefinidas.
 
